@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: betting-game-api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: betting-game
@@ -20,11 +20,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: "700Mi"
+            memory: "500Mi"
             cpu: "400m"
           limits:
-            memory: "800Mi"
-            cpu: "500m"
+            memory: "1024Mi"
+            cpu: "700m"
         env:
         - name: ACCESS_KEY_ID
           valueFrom:
@@ -66,21 +66,22 @@ spec:
           httpGet:
             path: /api/betting/game/actuator/health/liveness
             port: 8080
-          failureThreshold: 10
-          periodSeconds: 10
+          failureThreshold: 30
+          periodSeconds: 2
         livenessProbe:
           httpGet:
             port: 8080
             path: /api/betting/game/actuator/health/liveness
-          initialDelaySeconds: 20
+          initialDelaySeconds: 10
           periodSeconds: 3
           failureThreshold: 3
         readinessProbe:
           httpGet:
             port: 8080
             path: /api/betting/game/actuator/health/readiness
-          initialDelaySeconds: 20
+          initialDelaySeconds: 10
           periodSeconds: 3
+          failureThreshold: 3
 
 ---
 apiVersion: v1
